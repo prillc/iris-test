@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"iris-test/web/routes"
+	"iris-test/web/validate"
 	"log"
 	"strconv"
 
@@ -47,8 +48,10 @@ func main() {
 		})
 	}
 
-	// cookie 测试
-	routes.CookieRoute(app)
+	// 路由初始化
+	routes.RouteInit(app)
+	// 初始化校验
+	validate.ValidatorInit()
 
 	err := app.Run(iris.Addr(":8080"))
 	if err != nil {
