@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"iris-test/web/routes"
 	"log"
 	"strconv"
 
@@ -22,6 +23,9 @@ func main() {
 	// 注册html
 	app.RegisterView(iris.HTML("./web/views/", ".html").Reload(true))
 
+	// 中间件，打印
+
+	app.Use(logThisMiddleware)
 	// 最基本的Get请求
 	app.Get("/ping", func(ctx iris.Context) {
 		_, _ = ctx.WriteString("ping")
@@ -33,7 +37,7 @@ func main() {
 	})
 
 	// 路由的分组
-	userRoute := app.Party("/users", logThisMiddleware)
+	userRoute := app.Party("/users")
 	{
 		// 带参数的路由
 		userRoute.Get("/{id:int min(1)}", func(ctx iris.Context) {
@@ -42,6 +46,9 @@ func main() {
 			_, _ = ctx.WriteString(strconv.Itoa(userId))
 		})
 	}
+
+	// cookie 测试
+	routes.CookieRoute(app)
 
 	err := app.Run(iris.Addr(":8080"))
 	if err != nil {
