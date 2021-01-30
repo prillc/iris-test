@@ -2,6 +2,9 @@ package main
 
 import (
 	"fmt"
+	"iris-test/infrastructure"
+	"iris-test/web/initial"
+	"iris-test/web/middleware"
 	"iris-test/web/routes"
 	"iris-test/web/validate"
 	"log"
@@ -10,33 +13,21 @@ import (
 	"github.com/kataras/iris/v12"
 )
 
-func logThisMiddleware(ctx iris.Context) {
-	//ctx.Path() 请求的url
-	ctx.Application().Logger().Infof("Path: %s | IP: %s", ctx.Path(), ctx.RemoteAddr())
-
-	//ctx.Next 继续往下一个处理方法 中间件 如果没有他 那么就不会执行 usersRoutes
-	ctx.Next()
-}
-
 func main() {
 	app := iris.New()
+	// 注册中间件
+	middleware.Register(app)
 
 	// 注册html
 	app.RegisterView(iris.HTML("./web/views/", ".html").Reload(true))
-
-	// 中间件，打印
-
-	app.Use(logThisMiddleware)
 	// 最基本的Get请求
 	app.Get("/ping", func(ctx iris.Context) {
 		_, _ = ctx.WriteString("ping")
 	})
-
 	// 返回.html
 	app.Get("/index", func(ctx iris.Context) {
 		_ = ctx.View("index.html")
 	})
-
 	// 路由的分组
 	userRoute := app.Party("/users")
 	{
@@ -52,6 +43,8 @@ func main() {
 	routes.RouteInit(app)
 	// 初始化校验
 	validate.ValidatorInit()
+	// 迁移数据库
+	initial.ModelMigrate(infrastructure.GlobalRepositories.DB)
 
 	err := app.Run(iris.Addr(":8080"))
 	if err != nil {
