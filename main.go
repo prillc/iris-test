@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"iris-test/infrastructure"
+	"iris-test/web/initial"
 	"iris-test/web/middleware"
 	"iris-test/web/routes"
 	"iris-test/web/validate"
@@ -41,6 +43,8 @@ func main() {
 	routes.RouteInit(app)
 	// 初始化校验
 	validate.ValidatorInit()
+	// 迁移数据库
+	initial.ModelMigrate(infrastructure.GlobalRepositories.DB)
 
 	err := app.Run(iris.Addr(":8080"))
 	if err != nil {

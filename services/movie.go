@@ -6,7 +6,8 @@ import (
 )
 
 type MovieService interface {
-	GetByID(id int64) (models.Movie, bool)
+	FindById(id int64) *models.Movie
+	Select(limit int) []*models.Movie
 }
 
 func NewMovieService(repo repositories.MovieRepository) MovieService {
@@ -17,6 +18,10 @@ type movieService struct {
 	repo repositories.MovieRepository
 }
 
-func (s *movieService) GetByID(id int64) (models.Movie, bool) {
-	return s.repo.Select(), true
+func (s *movieService) Select(limit int) []*models.Movie {
+	return s.repo.Select(limit)
+}
+
+func (s *movieService) FindById(id int64) *models.Movie {
+	return s.repo.FindById(id)
 }
