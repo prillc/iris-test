@@ -48,3 +48,29 @@ func (c *MovieController) Post(ctx iris.Context) *common.Response {
 		Poster: "",
 	}, "ok")
 }
+
+type MovieHistoryController struct {
+	Service services.MovieHistoryService
+}
+
+func (m *MovieHistoryController) Get() *common.Response {
+	histories := m.Service.List(map[string]interface{}{"movie_id": 1}, 10)
+	return &common.Response{
+		Status: 0,
+		Msg:    "",
+		Data: iris.Map{
+			"histories": histories,
+		},
+	}
+}
+
+func (m *MovieHistoryController) GetCount() common.Response {
+	count := m.Service.Count(map[string]interface{}{"movie_id": 1})
+	return common.Response{
+		Status: 0,
+		Msg:    "",
+		Data: iris.Map{
+			"count": count,
+		},
+	}
+}

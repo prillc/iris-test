@@ -25,3 +25,24 @@ func (s *movieService) Select(limit int) []*models.Movie {
 func (s *movieService) FindById(id int64) *models.Movie {
 	return s.repo.FindById(id)
 }
+
+type MovieHistoryService interface {
+	List(query interface{}, limit int) []*models.MovieHistory
+	Count(query interface{}) int64
+}
+
+type movieHistoryService struct {
+	repo repositories.MovieHistoryRepository
+}
+
+func NewMovieHistoryService(repo repositories.MovieHistoryRepository) MovieHistoryService {
+	return &movieHistoryService{repo: repo}
+}
+
+func (s *movieHistoryService) List(query interface{}, limit int) []*models.MovieHistory {
+	return s.repo.Select(query, limit)
+}
+
+func (s *movieHistoryService) Count(query interface{}) int64 {
+	return s.repo.Count(query)
+}
