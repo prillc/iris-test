@@ -8,8 +8,9 @@ import (
 )
 
 type Repositories struct {
-	DB              *gorm.DB
-	MovieRepository repositories.MovieRepository
+	DB                     *gorm.DB
+	MovieRepository        repositories.MovieRepository
+	MovieHistoryRepository repositories.MovieHistoryRepository
 }
 
 func NewRepositories() *Repositories {
@@ -19,8 +20,9 @@ func NewRepositories() *Repositories {
 		return nil
 	}
 	return &Repositories{
-		DB:              db,
-		MovieRepository: repositories.NewMovieRepository(db),
+		DB:                     db,
+		MovieRepository:        repositories.NewMovieRepository(db),
+		MovieHistoryRepository: repositories.NewMovieHistoryRepository(db),
 	}
 }
 
