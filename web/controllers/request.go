@@ -15,3 +15,7 @@ func TestPostJsonHandler(ctx iris.Context) {
 
 	_, _ = ctx.Writef("ok %v", jsonParam)
 }
+
+func TestJWTHandler(ctx iris.Context) {
+	_, _ = ctx.Writef("测试JWT")
+}
